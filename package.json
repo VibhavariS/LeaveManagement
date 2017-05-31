@@ -1,0 +1,12 @@
+{
+	"name" : "leave_management",
+	"version" : "0.0.0",
+	"description" : "Employee leave manager application",
+	"homepage" : "",
+	"dependencies" : {
+		"express": "expressjs/express",
+		"node" : "nodejs/node",
+		"mongodb" : "mongodb/mongo",
+	},
+	"main" : "start.js"
+}
