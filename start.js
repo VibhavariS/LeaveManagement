@@ -5,8 +5,8 @@ var MongoClient=require('mongodb').MongoClient;
  var path= require('path')
  var bodyParser = require('body-parser')
  app.use(bodyParser.urlencoded({extended: false}))
-
-  app.get('/home', function(req, res){
+ 
+app.get('/home', function(req, res){
  	res.sendFile(path.join(path.join(__dirname, '/public', 'login.html')))
  			})
   app.get('/main', function(req, res){
@@ -20,6 +20,9 @@ var MongoClient=require('mongodb').MongoClient;
  			})
   app.get('/view', function(req, res){
  	res.sendFile(path.join(path.join(__dirname, '/public', 'view.html')))
+ 			})
+  app.get('/admin', function(req, res){
+ 	res.sendFile(path.join(path.join(__dirname, '/public', 'admin.html')))
  			})
  app.listen(3000, function(req, res){
  	console.log('Server running...')
