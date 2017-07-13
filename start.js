@@ -21,8 +21,8 @@ app.use(session({ secret: "Your secret key" }));
 var mongoose = require("mongoose");
 var Record = require("./model/record.model.js");
 var email;
-
-mongoose.connect('mongodb://localhost/empdb');
+var monogoURI = process.env.MONGODB_URI || 'mongodb://localhost/empdb';
+mongoose.connect(monogoURI);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error: '));
 db.once('open', function() {
@@ -32,7 +32,7 @@ db.once('open', function() {
             next(); //If session exists, proceed to page
         } else {
             var err = new Error("Not logged in!");
-            res.redirect('http://localhost:8080/home');
+            res.redirect('/home');
             //next(err);  //Error, trying to access unauthorized page!
         }
     }
@@ -45,7 +45,7 @@ db.once('open', function() {
                 console.log(err);
             } else {
                 req.session.user = jwtToken;
-                res.send({ redirect: 'http://localhost:8080/main' });
+                res.send({ redirect: '/main' });
             }
         })
     })
