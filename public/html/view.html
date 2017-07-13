@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script
+  src="https://code.jquery.com/jquery-2.1.4.min.js"
+  integrity="sha256-8WqyJLuWKRBVhxXIL1jBDD7SDxU936oZkCnxQbWwJVw="
+  crossorigin="anonymous"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="80946248974-usm5tioi12k6pf6t48epj8cri5bp9jo7.apps.googleusercontent.com">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+
+<script type = "text/javascript" language = "javascript">
+	var email = sessionStorage.getItem('email');
+	$(document).ready(function(){
+		$.get("http://localhost:8080/getData", {email : email}, function(result, err){
+			if(err=='error'){
+				console.log(err);
+			}
+			else{
+      			var leaves = result[0].leaves;
+      			var tbl = "<table>"
+      			var content = "";
+      			for (i=0; i<leaves.length; i++){
+      				content +=
+      					'<tr>+<td>'+ moment.utc(leaves[i].from).format('L')+' ('+ moment(leaves[i].from).format('dddd')+')'+
+      					'</td><td>'+ moment.utc(leaves[i].to).format('L')+' ('+ moment(leaves[i].to).format('dddd')+')'+
+      					'</td><td>'+ leaves[i].reason+
+      					'</td><td>'+ leaves[i].approved+
+      					'</td></tr>';
+				}
+				content+="</table>"
+				$('#myTableData').append(content);
+			}
+		});
+	});
+	function onLoad() {
+    	gapi.load('auth2', function() {
+        gapi.auth2.init();
+    	});
+    }
+
+	function signOut() {
+    	var auth2 = gapi.auth2.getAuthInstance();
+    	auth2.signOut().then(function () {
+      		console.log('User signed out.');
+		});
+	}
+ </script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Dosis|Righteous');
+.button{
+	background-color: white;
+	border: 2px solid indianred;
+	color:indianred;
+	font-size: 18px;
+	padding: 15px 32px;
+	text-align: center;
+	font-family:'Dosis', sans-serif;
+	text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.button:hover{
+	background-color: #c33c3c;
+	color:white;
+	border: 2px solid #c33c3c;
+}
+table{
+	width: 80%;
+}
+h1{
+	color: white;
+	text-align: left;
+	padding-left: 2cm;
+	font-family: 'Righteous', cursive;
+}
+th{
+	height: 50px;
+}
+a { 
+	font-family:  'Dosis', sans-serif;
+	color: white;
+	font-size: 25px;
+	padding: 15px;
+	position: relative;
+	top: 23px;
+	text-align: center;
+	border: 2px solid white;
+}
+a:hover{
+	color: black;
+	border: 2px solid black;
+}
+th, td{
+	font-family:  'Dosis', sans-serif;
+	color: #c33c3c;
+	font-size: 20px;
+	padding: 15px;
+	text-align: left;
+}
+tr:nth-child(even) {
+	background-color: #f3d8d8
+}
+</style>
+</head>
+<body>
+<center>
+<table border="1" id="myTableData">
+<div class="container-fluid">
+	<div class="row" style="height: 70px">
+	</div>
+	<div class="row" style="background-color: indianred; height: 80px">
+		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+			<h1 id="hi">Leave Requests</h1>
+		</div>
+		
+		<div class="col-xs-4 col-xs-offset-3 col-sm-3 col-sm-offset-4 col-md-2 col-md-offset-5 col-lg-2 col-lg-offset-6">
+			<a href="http://localhost:8080/home" onclick="signOut();">Sign out</a>
+		</div>
+	</div>
+	<div class="row" style=" height: 100px">				
+	</div>
+</div>
+<tr>
+	<th>From (date)</th>
+	<th>To (date)</th>
+	<th>Reason for absence</th>
+	<th>Approved</th>
+</tr>
+</table>
+</center>
+<div class="row" style="height: 50px">
+</div>
+<div class="row">
+	<div class="col-xs-1 col-xs-offset-3 col-sm-1 col-sm-offset-4 col-md-2 col-md-offset-5 col-lg-2 col-lg-offset-5">
+		<input type="button" class="button" name="back" value="Previous page" onclick="location.href='main.html'">
+	</div>
+</div>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+</html>

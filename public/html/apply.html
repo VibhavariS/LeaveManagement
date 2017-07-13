@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+<meta name="google-signin-client_id" content="80946248974-usm5tioi12k6pf6t48epj8cri5bp9jo7.apps.googleusercontent.com">
+
+<script
+  src="https://code.jquery.com/jquery-2.1.4.min.js"
+  integrity="sha256-8WqyJLuWKRBVhxXIL1jBDD7SDxU936oZkCnxQbWwJVw="
+  crossorigin="anonymous"></script>
+	<script type = "text/javascript" language = "javascript">
+		var id_token = sessionStorage.getItem('id_token');
+		id_token= JSON.parse(id_token);
+		var flag=0;
+		var email = sessionStorage.getItem('email');
+		var rem = sessionStorage.getItem('rem');
+		var name = sessionStorage.getItem('namee');
+		$(document).ready(function() {
+			if(rem<=0){
+            		alert("No more leave available");
+            		location.href='main.html';
+            	}
+
+            $(".button").click(function(event){
+				var start = $("#start").val();
+            	var end = $("#end").val();
+            	var reason = $("#reason").val();
+            	if((moment(start).isBefore(end) || moment(start).isSame(end)) && (moment(start).isAfter(moment())) && reason!="") {
+            		var diffDays=0;
+            		for(var m = moment(start); m.isSameOrBefore(end); m.add(1, 'days'))
+					{
+						if((moment(m).day())!= (0) && moment(m).day()!=(6))
+						{	
+							diffDays+=1;
+						}
+					}
+					if(diffDays>rem){
+           					var r = confirm("Number of leave days is lesser than required. Confirm application?");
+           					if(r == true){
+           						$.post("http://localhost:8080/apply", {start : start, end : end, reason : reason, email : email, name : name}, function(result){	
+        					console.log('Leave Applied');
+            			})
+           					}
+           					else{
+           						location.href='apply.html';
+           					}
+           				}else{
+           					$.post("http://localhost:8080/apply", {start : start, end : end, reason : reason, email : email, name : name}, function(result){	
+	        					console.log('Leave Applied');
+	            			})
+           				}
+           				
+
+         		}
+         		else if(reason==""){
+         			alert("Enter reason for leave");
+         			location.href = 'apply.html';
+         			document.getElementById("start").innerHTML = start;
+         			document.getElementById("end").innerHTML = end;
+         		}
+         		else{
+         			alert("Please enter valid dates!")
+         			location.href = 'apply.html';
+         		}
+         	})
+        })
+        function onLoad() {
+      		gapi.load('auth2', function() {
+        	gapi.auth2.init();
+        	console.log(gapi.auth2);
+      		});
+    	}
+
+		function signOut() {
+		var auth2 = gapi.auth2.getAuthInstance();
+    	auth2.signOut().then(function () {
+    		$.get("http://localhost:8080/destroy");
+      		console.log("User logged out.");
+	});
+}
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Dosis|Righteous');
+	.button{
+	padding-top: 1cm;
+	background-color: white;
+	border: 2px solid indianred;
+	color: indianred;
+	padding: 15px 32px;
+	text-align: center;
+	font-family: 'Dosis', sans-serif;
+	text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-size: 20px;
+}
+.button:hover{
+	background-color: #c33c3c;
+	color:white;
+	border: 2px solid #c33c3c;
+}
+a { 
+	font-family:  'Dosis', sans-serif;
+	color: white;
+	font-size: 25px;
+	padding: 15px;
+	position: relative;
+	top: 23px;
+	text-align: center;
+	border: 2px solid white;
+}
+a:hover{
+	color: black;
+	border: 2px solid black;
+}
+p {
+	text-align: center;
+	color: indianred;
+	padding-top: 1cm;
+	font-size: 30px;
+	font-family: 'Dosis', sans-serif;
+}
+h1 {
+	color: white;
+	text-indent: 50px;
+	font-family: 'Righteous', cursive;
+}
+</style>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row" style="height: 60px">
+		</div>
+		<div class="row" style="background-color: indianred; height: 80px">
+			<div class="col-lg-5">
+			<h1>Leave Application form</h1>
+		</div>
+		<div class="col-lg-2 col-lg-offset-4">
+			<a href="http://localhost:8080/home" onclick="signOut();">Sign out</a>
+		</div>
+		</div>
+		<div class="row" style=" height: 0px">				
+		</div>
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3">
+				<p>Starting date : <input type="date" id="start"></p>
+				<p>Ending date : <input type="date" id="end"></p>
+				<p style="padding-left: 40px">Reason : <input type="text" id="reason"></p>
+				<p></p>
+				<center><input type="button" class="button" name="submit" value="Submit dates" onclick="location.href='main.html'"></center>
+			</div>
+		</div>
+	</div>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+</html>

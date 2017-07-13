@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+  src="https://code.jquery.com/jquery-2.1.4.min.js"
+  integrity="sha256-8WqyJLuWKRBVhxXIL1jBDD7SDxU936oZkCnxQbWwJVw="
+  crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+
+<script type = "text/javascript" language = "javascript">
+	$(document).ready(function(){
+		$.get("http://localhost:8080/getNames", function(result, err){
+		if(err=='error'){
+			console.log(err);
+		}
+		else{
+			var content = "";
+			for (i=0; i<result.length; i++){
+				content +=
+				'<option value="'+result[i].name+'">'+result[i].name+'</option>';
+			}
+			content += '</option>';
+			$('#sel').append(content);
+		}		
+	});
+	
+});
+
+function funcApprove(val, from,to, row, col,i){
+	$.post("http://localhost:8080/approve", {name : val, from : from, to : to}, function(result, err){
+		if(err=="error"){
+			console.log("err-->",err);
+		}
+		else
+		{
+			document.getElementById("restable").rows[row].cells.item(col).innerHTML="Approved";
+			document.getElementById(i).style.display='none';
+		}
+	});
+};
+
+function funcDisapprove(val, from, row, col){
+	$.post("http://localhost:8080/disapprove", {name : val, from : from}, function(result, err){
+		if(err=="error"){
+			console.log("err-->",err);
+		}
+		else
+		{	
+			document.getElementById("restable").rows[row].cells.item(col).innerHTML="Disapproved";
+			document.getElementById(i).style.display='none';
+		}
+	});
+};
+
+function funcAll(){
+	document.getElementById("hi").innerHTML="All Requests";
+	$.post("http://localhost:8080/viewAll", function(result, err){
+		if(err=="error"){
+			console.log("err-->", err);
+		}
+		else
+		{
+			document.getElementById('restable').innerHTML = '';
+      		var contentt = "";
+      		contentt +='<tr>+<th>Name</th>'+
+      			'<th>From (date)</th>'+
+				'<th>To (date)</th>'+
+				'<th>Days</th>'+
+				'<th>Reason for absence</th>'+
+				'<th>Leave remaining (before approval)</th>'+
+				'<th>Leave remaining (after approval)</th>'+
+				'<th>Approve</th>'+
+				'<th>Disapprove</th>'+
+				'<th>Status</th>'+
+				'</tr>'
+			var col = 6;
+			var row = 1;
+      		for (i=0; i<result.length; i++){
+      			for(j=0; j<result[i].leaves.length; j++){
+
+      				var rem;      			
+      			var diffDays=0;
+				for(var m = moment(result[i].leaves[j].from); m.isSameOrBefore(result[i].leaves[j].to); m.add(1, 'days'))
+				{
+					if((moment(m).day())!= (0) && moment(m).day()!=(6))
+					{	
+						diffDays+=1;
+					}
+				}
+				if(result[i].leaves[j].approved == 'Approved' || result[i].leaves[j].approved == 'Disapproved'){
+      				rem=result[i].leavesRemaining;
+      			}
+      			else{
+      				rem=result[i].leavesRemaining- diffDays;
+      			}
+      				contentt +=
+      					'<tr id=\''+i+'\'>+<td>'+ result[i].name+
+      					'</td><td>'+ moment.utc(result[i].leaves[j].from).format('L')+' ('+ moment(result[i].leaves[j].from).format('dddd')+')'+
+      					'</td><td>'+ moment.utc(result[i].leaves[j].to).format('L')+' ('+ moment(result[i].leaves[j].to).format('dddd')+')'+
+      					'</td><td>'+ diffDays+
+      					'</td><td>'+ result[i].leaves[j].reason+
+      					'</td><td>'+ result[i].leavesRemaining+
+      					'</td><td>'+ rem+
+      					'</td><td><input type="button" class="approve" value="Approve" style = "width:100%" onclick="funcApprove(\''+result[i].name+'\', \''+result[i].leaves[j].from+'\',\''+result[i].leaves[j].to+'\',\''+row+'\',\''+col+'\',\''+i+'\')"></Button></td>'+
+      					'<td><input type="button" class="disapprove" value ="Disapprove" style="width:100%" onclick="funcDisapprove(\''+result[i].name+'\', \''+result[i].leaves[j].from+'\',\''+row+'\',\''+col+'\',\''+i+'\')"></Button></td>'+
+      					'<td> Pending </td>'
+      					'</td></tr>';
+      				row +=1;
+				}
+			}
+			contentt += "</table>";
+			$('#restable').append(contentt);	
+		}
+	})
+}
+
+function changeInfo(el) {
+    var val = el.options[el.selectedIndex].text;
+  	var i;
+  	document.getElementById("hi").innerHTML=val;
+    $.get("http://localhost:8080/getData2", {name : val}, function(result, err){
+		if(err=='error'){
+			console.log(err);
+		}
+		else{
+			document.getElementById('restable').innerHTML = '';
+      		var leaves = result[0].leaves;
+      		var contentt = "";
+      		contentt +='<tr>+<th>From (date)</th>'+
+				'<th>To (date)</th>'+
+				'<th>Days</th>'+
+				'<th>Reason for absence</th>'+
+				'<th>Leave remaining (before approval)</th>'+
+				'<th>Leave remaining (after approval)</th>'+
+				'<th>Status</th>'+
+			'</tr>'
+			var col = 5;
+			var row = 1;
+			var rem;
+      		for (i=0; i<leaves.length; i++){
+      			
+      			var diffDays=0;
+				for(var m = moment(leaves[i].from); m.isSameOrBefore(leaves[i].to); m.add(1, 'days'))
+				{
+					if((moment(m).day())!= (0) && moment(m).day()!=(6))
+					{	
+						diffDays+=1;
+					}
+				}
+				if(leaves[i].approved=='Approved' || leaves[i].approved == 'Disapproved'){
+      				rem=result[0].leavesRemaining;
+      			}
+      			else{
+      				rem=result[0].leavesRemaining- diffDays;
+      			}
+      			contentt +=
+      			'<tr>+<td>'+ moment.utc(leaves[i].from).format('L')+' ('+ moment(leaves[i].from).format('dddd')+')'+
+      			'</td><td>'+ moment.utc(leaves[i].to).format('L')+ ' ('+ moment(leaves[i].to).format('dddd')+')'+
+      			'</td><td>'+ diffDays+
+      			'</td><td>'+ leaves[i].reason+
+      			'</td><td>'+ result[0].leavesRemaining+
+      			'</td><td>'+ rem+
+      			'</td><td>'+ leaves[i].approved+
+      			'</td>+</tr>';
+      			row += 1;
+			}
+			contentt += "</table>";
+
+			$('#restable').append(contentt);
+		}
+	});
+}
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Dosis|Righteous');
+table{
+	width: 80%;
+}
+button{
+	color: #c33c3c;
+	background-color: white;
+	font-size: 20px;
+	padding: 16px;
+	position: relative;
+	top: 8px;
+	font-family: 'Dosis', sans-serif;
+}
+
+.approve, .disapprove { 
+	color: #c33c3c;
+	background-color: white;
+	font-family: 'Dosis', sans-serif;
+}
+.approve:hover, .disapprove:hover{
+	color: white;
+	background-color: indianred;
+}
+h1{
+	color: white;
+	text-align: left;
+	padding-left: 2cm;
+	font-family: 'Righteous', cursive;
+}
+th{
+	height: 50px;
+}
+th, td {
+	font-family: 'Dosis', sans-serif;
+	color: #c33c3c;
+	font-size: 20px;
+	padding: 15px;
+	text-align: left;
+}
+select {
+	font-family: 'Dosis', sans-serif;
+	color: #c33c3c;
+	font-size: 23px;
+	padding: 16px;
+	position: relative;
+	top: 8px;
+}
+select: hover, option: hover {
+	background-color: #f3d8d8;
+}
+tr:nth-child(even) {
+	background-color: #f3d8d8
+}
+</style>
+</head>
+<body>
+<center>
+<div class="container-fluid">
+	<div class="row" style="height: 70px">
+	</div>
+	<div class="row" style="background-color: indianred; height: 80px">
+		<div class="col-xs-1 col-sm-1 col-md-2 col-lg-5">
+			<h1 id="hi">All requests</h1>
+		</div>
+		<div class="col-xs-2 col-xs-offset-2 col-sm-1 col-sm-offset-4 col-md-2 col-md-offset-2 col-lg-2 col-lg-offset-2">
+			<select id="sel" onchange="changeInfo(this)">
+			</select>
+		</div>
+		<div class="col-xs-2 col-xs-offset-3 col-sm-2 col-sm-offset-2 col-md-2 col-md-offset-1 col-lg-2 col-lg-offset-1" >
+			<button id="all" onclick="funcAll()">
+			View all
+			</button>
+		</div>
+	</div>
+	<div class="row" style=" height: 100px">
+	</div>
+	<div>
+		<table border="1" id="restable">
+		</table>
+	</div>
+	<div class="row" id="field">
+	</div> 
+</div>
+</table>
+</center>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

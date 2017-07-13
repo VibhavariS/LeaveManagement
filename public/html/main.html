@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+  src="https://code.jquery.com/jquery-2.1.4.min.js"
+  integrity="sha256-8WqyJLuWKRBVhxXIL1jBDD7SDxU936oZkCnxQbWwJVw="
+  crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<meta name="google-signin-client_id" content="80946248974-usm5tioi12k6pf6t48epj8cri5bp9jo7.apps.googleusercontent.com">
+
+<script type="text/javascript">
+	var email = sessionStorage.getItem('email');
+	var p = sessionStorage.getItem('pp');
+	var name = sessionStorage.getItem('namee');
+	var doj = sessionStorage.getItem('doj');
+	$(document).ready(function() {
+		var xhttp = new XMLHttpRequest();
+		document.getElementById('myPic').setAttribute('src',p);
+		xhttp.onreadystatechange = function() {
+		    if (this.readyState == 4 && this.status == 200) {
+	    		var jsonResponse = JSON.parse(this.responseText);
+	    		document.getElementById("rdays").innerHTML = jsonResponse.lrr;
+	    		document.getElementById("rr").innerHTML = jsonResponse.nd;
+	    		sessionStorage.setItem('rem', jsonResponse.lrr);
+	    		document.getElementById("name").innerHTML = name;
+	    	}
+	  	};
+	  	xhttp.open("GET", "http://localhost:8080/getLr?email="+email+"&doj="+doj+"", true);
+	  	xhttp.send();
+	});
+	function onLoad() {
+		gapi.load('auth2', function() {
+		gapi.auth2.init();
+		console.log(gapi.auth2);
+		});
+    }
+
+	function signOut() {
+		var auth2 = gapi.auth2.getAuthInstance();
+    	auth2.signOut().then(function () {
+    		$.get("http://localhost:8080/destroy");
+      		console.log("User logged out.");
+	});
+}
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Dosis|Righteous');
+.button{
+	background-color: white;
+	border: 2px solid indianred;
+	color:indianred;
+	padding: 1vw 1.4vw;
+	font-size: 1.5vw;
+	text-align: center;
+	font-family:'Dosis', sans-serif;
+	text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.button:hover{
+	background-color: #c33c3c;
+	color:white;
+	border: 2px solid #c33c3c;
+}
+#name{
+	padding-top: 10px;
+	font-size: 2.2vw;
+	color: indianred;
+	font-family: 'Dosis', sans-serif;
+}
+p, #rdays, #rr {
+	padding-top: 1cm;
+	font-size: 2.2vw;
+	color: indianred;
+	font-family: 'Dosis', sans-serif;
+}
+a { 
+	font-family:  'Dosis', sans-serif;
+	color: white;
+	font-size: 25px;
+	padding: 15px;
+	position: relative;
+	top: 23px;
+	text-align: center;
+	border: 2px solid white;
+}
+a:hover{
+	color: black;
+	border: 2px solid black;
+}
+h1 {
+	color: white;
+	text-indent: 50px;
+	font-family: 'Righteous', cursive;
+</style>
+</head>
+<body style="background-color: white">
+	<form>
+		<div class="container-fluid">
+			<div class="row" style=" height: 70px">				
+			</div>
+			<div class="row" style="background-color: indianred; height: 80px">
+				<div class="col-lg-4">
+					<h1>Employee Profile</h1>
+				</div>
+				<div class="col-lg-2 col-lg-offset-5">
+					<a href="http://localhost:8080/home" onclick="signOut();">Sign out</a>
+				</div>
+			</div>
+			<div class="row" style=" height: 100px">				
+			</div>
+			<div class="row" style="height: 250px">
+				<div class="col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1 col-md-3 col-md-offset-2 col-lg-4 col-lg-offset-2">
+					<div class="row">
+						<img id="myPic" alt="Profile image" style="width: 150px; height: 200px">
+					</div>
+					<div class="row" id="name">
+					</div>
+				</div>
+				<div class="col-xs-2 col-xs-offset-3 col-sm-3 col-sm-offset-1 col-md-4 col-md-offset-0 col-lg-4 col-lg-offset-0">
+					<p>Number of leave days remaining : </p>
+					<p>Date of renewal of 20 leave days : </p>
+				</div>
+				<div class="col-xs-1 col-sm-1 col-md-2 col-lg-2">
+					<div class="row", id="rdays" style="height : 90px"></div>
+					<div class="row", id="rr"></div>
+				</div>
+			</div>
+			<div class="row" style="height: 20px">
+			</div>
+			<div class="row">
+				<div class="col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-2 col-md-2 col-md-offset-3 col-lg-2 col-lg-offset-4">
+					<input type="button" class="button" name="apply" value="Apply leave" onclick="location.href='apply.html'">
+				</div>
+				<div class="col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1 col-md-2 col-md-offset-1 col-lg-2 col-lg-offset-0">
+					<input type="button" class="button" name="view" value="View previous leave" onclick="loadView()">
+				</div>
+			</div>
+		</div>
+	</form>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+	function loadView() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				window.location.replace("http://localhost:8080/view");
+			}
+		};
+		xhttp.open("GET", "http://localhost:8080/view?email"+email+"", true);
+		xhttp.send();
+	}
+</script>
+</body>
+<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+</html>
