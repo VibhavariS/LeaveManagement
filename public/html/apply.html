@@ -20,7 +20,7 @@
 		$(document).ready(function() {
 			if(rem<=0){
             		alert("No more leave available");
-            		location.href='main.html';
+            		location.href='/main';
             	}
 
             $(".button").click(function(event){
@@ -44,7 +44,7 @@
             			})
            					}
            					else{
-           						location.href='apply.html';
+           						location.href='/apply';
            					}
            				}else{
            					$.post("/apply", {start : start, end : end, reason : reason, email : email, name : name}, function(result){	
@@ -56,13 +56,13 @@
          		}
          		else if(reason==""){
          			alert("Enter reason for leave");
-         			location.href = 'apply.html';
+         			location.href = '/apply';
          			document.getElementById("start").innerHTML = start;
          			document.getElementById("end").innerHTML = end;
          		}
          		else{
          			alert("Please enter valid dates!")
-         			location.href = 'apply.html';
+         			location.href = '/apply';
          		}
          	})
         })
@@ -151,7 +151,7 @@ h1 {
 				<p>Ending date : <input type="date" id="end"></p>
 				<p style="padding-left: 40px">Reason : <input type="text" id="reason"></p>
 				<p></p>
-				<center><input type="button" class="button" name="submit" value="Submit dates" onclick="location.href='main.html'"></center>
+				<center><input type="button" class="button" name="submit" value="Submit dates" onclick="location.href='/main'"></center>
 			</div>
 		</div>
 	</div>
