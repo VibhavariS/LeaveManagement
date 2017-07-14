@@ -26,7 +26,7 @@
 	    		document.getElementById("name").innerHTML = name;
 	    	}
 	  	};
-	  	xhttp.open("GET", "http://localhost:8080/getLr?email="+email+"&doj="+doj+"", true);
+	  	xhttp.open("GET", "/getLr?email="+email+"&doj="+doj+"", true);
 	  	xhttp.send();
 	});
 	function onLoad() {
@@ -39,7 +39,7 @@
 	function signOut() {
 		var auth2 = gapi.auth2.getAuthInstance();
     	auth2.signOut().then(function () {
-    		$.get("http://localhost:8080/destroy");
+    		$.get("/destroy");
       		console.log("User logged out.");
 	});
 }
@@ -107,7 +107,7 @@ h1 {
 					<h1>Employee Profile</h1>
 				</div>
 				<div class="col-lg-2 col-lg-offset-5">
-					<a href="http://localhost:8080/home" onclick="signOut();">Sign out</a>
+					<a href="/home" onclick="signOut();">Sign out</a>
 				</div>
 			</div>
 			<div class="row" style=" height: 100px">				
@@ -147,10 +147,10 @@ h1 {
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				window.location.replace("http://localhost:8080/view");
+				window.location.href="/view";
 			}
 		};
-		xhttp.open("GET", "http://localhost:8080/view?email"+email+"", true);
+		xhttp.open("GET", "/view?email"+email+"", true);
 		xhttp.send();
 	}
 </script>

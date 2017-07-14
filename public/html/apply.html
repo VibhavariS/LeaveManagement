@@ -39,7 +39,7 @@
 					if(diffDays>rem){
            					var r = confirm("Number of leave days is lesser than required. Confirm application?");
            					if(r == true){
-           						$.post("http://localhost:8080/apply", {start : start, end : end, reason : reason, email : email, name : name}, function(result){	
+           						$.post("/apply", {start : start, end : end, reason : reason, email : email, name : name}, function(result){	
         					console.log('Leave Applied');
             			})
            					}
@@ -47,7 +47,7 @@
            						location.href='apply.html';
            					}
            				}else{
-           					$.post("http://localhost:8080/apply", {start : start, end : end, reason : reason, email : email, name : name}, function(result){	
+           					$.post("/apply", {start : start, end : end, reason : reason, email : email, name : name}, function(result){	
 	        					console.log('Leave Applied');
 	            			})
            				}
@@ -76,7 +76,7 @@
 		function signOut() {
 		var auth2 = gapi.auth2.getAuthInstance();
     	auth2.signOut().then(function () {
-    		$.get("http://localhost:8080/destroy");
+    		$.get("/destroy");
       		console.log("User logged out.");
 	});
 }
@@ -140,7 +140,7 @@ h1 {
 			<h1>Leave Application form</h1>
 		</div>
 		<div class="col-lg-2 col-lg-offset-4">
-			<a href="http://localhost:8080/home" onclick="signOut();">Sign out</a>
+			<a href="/home" onclick="signOut();">Sign out</a>
 		</div>
 		</div>
 		<div class="row" style=" height: 0px">				

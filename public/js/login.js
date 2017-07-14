@@ -7,10 +7,8 @@ gapi.load('auth2', function() {
 
   // Sign the user in, and then retrieve their ID.
   auth2.signIn().then(function(googleUser) {
-    console.log(googleUser);
     var profile = googleUser.getBasicProfile();
     var id_token = googleUser.getAuthResponse();
-	console.log(id_token);
 		
  	$.ajax({
  		method: 'GET',
@@ -25,13 +23,12 @@ gapi.load('auth2', function() {
  		}
 
  	}).done(function(data){
- 		console.log(data);
  		sessionStorage.setItem('pp', profile.getImageUrl());
 		sessionStorage.setItem('id_token', JSON.stringify(id_token));
 		sessionStorage.setItem('email', profile.getEmail());
 		sessionStorage.setItem('namee', profile.getName());
 		sessionStorage.setItem('doj', data.customSchemas.Dates.Date_of_Joining);
- 		$.post("http://localhost:8080/login", {id_token : id_token.id_token, email : profile.getEmail(), test: id_token, pp : profile.getImageUrl()},function(result){
+ 		$.post("/login", {id_token : id_token.id_token, email : profile.getEmail(), test: id_token, pp : profile.getImageUrl()},function(result){
          		window.location=result.redirect;
          	});
  	})

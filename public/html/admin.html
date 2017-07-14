@@ -11,7 +11,7 @@
 
 <script type = "text/javascript" language = "javascript">
 	$(document).ready(function(){
-		$.get("http://localhost:8080/getNames", function(result, err){
+		$.get("/getNames", function(result, err){
 		if(err=='error'){
 			console.log(err);
 		}
@@ -29,7 +29,7 @@
 });
 
 function funcApprove(val, from,to, row, col,i){
-	$.post("http://localhost:8080/approve", {name : val, from : from, to : to}, function(result, err){
+	$.post("/approve", {name : val, from : from, to : to}, function(result, err){
 		if(err=="error"){
 			console.log("err-->",err);
 		}
@@ -42,7 +42,7 @@ function funcApprove(val, from,to, row, col,i){
 };
 
 function funcDisapprove(val, from, row, col){
-	$.post("http://localhost:8080/disapprove", {name : val, from : from}, function(result, err){
+	$.post("/disapprove", {name : val, from : from}, function(result, err){
 		if(err=="error"){
 			console.log("err-->",err);
 		}
@@ -56,7 +56,7 @@ function funcDisapprove(val, from, row, col){
 
 function funcAll(){
 	document.getElementById("hi").innerHTML="All Requests";
-	$.post("http://localhost:8080/viewAll", function(result, err){
+	$.post("/viewAll", function(result, err){
 		if(err=="error"){
 			console.log("err-->", err);
 		}
@@ -120,7 +120,7 @@ function changeInfo(el) {
     var val = el.options[el.selectedIndex].text;
   	var i;
   	document.getElementById("hi").innerHTML=val;
-    $.get("http://localhost:8080/getData2", {name : val}, function(result, err){
+    $.get("/getData2", {name : val}, function(result, err){
 		if(err=='error'){
 			console.log(err);
 		}
