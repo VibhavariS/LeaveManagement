@@ -6,6 +6,7 @@ gapi.load('auth2', function() {
   });
 });
 function onSignIn(googleUser){
+    var profile = googleUser.getBasicProfile();
     var id_token = googleUser.getAuthResponse();
     
   $.ajax({
