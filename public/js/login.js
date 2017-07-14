@@ -1,6 +1,6 @@
 gapi.load('auth2', function() {
   auth2 = gapi.auth2.init({
-    client_id: '80946248974-usm5tioi12k6pf6t48epj8cri5bp9jo7.apps.googleusercontent.com',
+    client_id: '490379597944-pigcng7tfb8hb199p0ppcoiiuh1mio6h.apps.googleusercontent.com',
     fetch_basic_profile: true,
     scope: 'https://www.googleapis.com/auth/admin.directory.user.readonly https://www.googleapis.com/auth/admin.directory.userschema.readonly profile email openid'
   });

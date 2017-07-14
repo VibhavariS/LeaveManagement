@@ -1,8 +1,8 @@
 var google = require('googleapis');
 
 var OAuth2 = google.auth.OAuth2;
-var CLIENT_ID = "490379597944-pigcng7tfb8hb199p0ppcoiiuh1mio6h.apps.googleusercontent.com";
-var CLIENT_SECRET = "FC1VAUZ8lmVrsAuOcn87mvEU";
+var CLIENT_ID = process.env.CLIENT_ID
+var CLIENT_SECRET = process.env.CLIENT_SECRET;
 var REDIRECT_URL = 'http://emp-leave.herokuapp.com/main';
 var GoogleAuth = require('google-auth-library');
 var auth = new GoogleAuth;
@@ -10,8 +10,6 @@ var client = new auth.OAuth2(CLIENT_ID);
 var mongoose = require("mongoose");
 var User = require("./model/user.model.js");
 var tokenService = require("./jwt.service.js");
-var plus = require("./get.auth.url.js").plus;
-var url = require('./get.auth.url.js').url;
 
 var oauth2Client = new OAuth2(
   CLIENT_ID,
