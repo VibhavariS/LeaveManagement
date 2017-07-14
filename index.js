@@ -1,9 +1,9 @@
 var google = require('googleapis');
 
 var OAuth2 = google.auth.OAuth2;
-var CLIENT_ID = process.env.CLIENT_ID;
-var CLIENT_SECRET = process.env.CLIENT_SECRET;
-var REDIRECT_URL = 'http://localhost:8080/main';
+var CLIENT_ID = "490379597944-pigcng7tfb8hb199p0ppcoiiuh1mio6h.apps.googleusercontent.com";
+var CLIENT_SECRET = "FC1VAUZ8lmVrsAuOcn87mvEU";
+var REDIRECT_URL = 'http://emp-leave.herokuapp.com/main';
 var GoogleAuth = require('google-auth-library');
 var auth = new GoogleAuth;
 var client = new auth.OAuth2(CLIENT_ID);
