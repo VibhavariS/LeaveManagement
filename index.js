@@ -2,7 +2,7 @@ var google = require('googleapis');
 
 var OAuth2 = google.auth.OAuth2;
 var CLIENT_ID = process.env.CLIENT_ID
-var CLIENT_SECRET = process.env.CLIENT_SECRET;
+var CLIENT_SECRET = process.env.CLIENT_SECRET
 var REDIRECT_URL = 'http://emp-leave.herokuapp.com/main';
 var GoogleAuth = require('google-auth-library');
 var auth = new GoogleAuth;

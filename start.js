@@ -3,7 +3,6 @@ var app = express();
 var idTokenVerification = require('./index')
 var port = process.env.PORT || 8080;
 var path = require('path')
-var url = require('./get.auth.url')
 var service = require('./jwt.service')
 var bodyParser = require('body-parser')
 var moment = require('moment');
